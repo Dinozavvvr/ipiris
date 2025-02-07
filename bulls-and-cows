@@ -1,0 +1,77 @@
+trap_handle() { echo; echo "Для завершения работы сценария введите 'q' или 'Q'."; }
+trap trap_handle SIGINT
+
+gen_num() {
+  d=()
+  while [[ ${#d[@]} -lt 4 ]]; do
+    n=$((RANDOM % 10))
+    if [[ ${#d[@]} -eq 0 && $n -eq 0 ]]; then continue; fi
+    [[ ! " ${d[@]} " =~ " $n " ]] && d+=($n)
+  done
+  echo "${d[@]}" | tr -d ' '
+}
+
+check_input() {
+  inp=$1
+  if [[ $inp == "q" || $inp == "Q" ]]; then
+    echo "quit"
+  elif [[ $inp =~ ^[0-9]{4}$ ]] && [[ $(echo $inp | grep -o . | sort | uniq -d | wc -l) -eq 0 ]]; then
+    echo "valid"
+  else
+    echo "invalid"
+  fi
+}
+
+main() {
+  guess=$1
+  b=0
+  c=0
+  for i in {0..3}; do
+    if [[ ${guess:$i:1} -eq ${secret:$i:1} ]]; then
+      ((b++))
+    elif [[ $secret == *"${guess:$i:1}"* ]]; then
+      ((c++))
+    fi
+  done
+  echo "$b $c"
+}
+
+secret=$(gen_num)
+h=()
+a=1
+
+echo "********************************************************************************"
+echo "* Я загадал 4-значное число с неповторяющимися цифрами. На каждом ходу делайте *"
+echo "* попытку отгадать загаданное число. Попытка - это 4-значное число с           *"
+echo "* неповторяющимися цифрами.                                                    *"
+echo "********************************************************************************"
+
+while true; do
+  read -p "Попытка $a: " ui
+  res=$(check_input "$ui")
+
+  if [[ $res == "quit" ]]; then
+    echo "Выход из игры."
+    exit 1
+  elif [[ $res == "invalid" ]]; then
+    echo "Ошибка: введите 4-значное число с неповторяющимися цифрами или 'q' для выхода."
+    continue
+  fi
+
+  r=$(main "$ui")
+  b=$(echo $r | cut -d' ' -f1)
+  c=$(echo $r | cut -d' ' -f2)
+
+  echo "Коров - $c Быков - $b"
+  h+=("$a. $ui (Коров - $c Быков - $b)")
+
+  echo "История ходов:"
+  for e in "${h[@]}"; do echo "$e"; done
+
+  if [[ $b -eq 4 ]]; then
+    echo "Поздравляем! Вы угадали число $secret."
+    exit 0
+  fi
+
+  ((a++))
+done
