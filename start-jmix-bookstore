@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # variables
-NETWORK_NAME="bookstore-network20"
-SUBNET_NAME="bookstore-subnet20"
+NETWORK_NAME="bookstore-network17"
+SUBNET_NAME="bookstore-subnet17"
 SUBNET_RANGE="192.168.1.0/24"
 ZONE="ru-central1-a"
-VM_NAME="bookstore-vm20"
+VM_NAME="bookstore-vm17"
 IMAGE_ID="fd86idv7gmqapoeiq5ld"
 PLATFORM="standard-v3"
 CORES=2

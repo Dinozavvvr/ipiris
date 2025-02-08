@@ -15,11 +15,11 @@ provider "yandex" {
 }
 
 resource "yandex_vpc_network" "bookstore_network" {
-  name = "bookstore-network20"
+  name = "bookstore-network17"
 }
 
 resource "yandex_vpc_subnet" "bookstore_subnet" {
-  name           = "bookstore-subnet20"
+  name           = "bookstore-subnet17"
   zone           = "ru-central1-a"
   network_id     = yandex_vpc_network.bookstore_network.id
   v4_cidr_blocks = ["192.168.1.0/24"]
@@ -41,7 +41,7 @@ resource "local_file" "public_key" {
 }
 
 resource "yandex_compute_instance" "bookstore_vm" {
-  name        = "bookstore-vm20"
+  name        = "bookstore-vm17"
   platform_id = "standard-v3"
   zone        = "ru-central1-a"
 
